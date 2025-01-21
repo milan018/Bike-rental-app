@@ -59,3 +59,16 @@ export const signOut = async () => {
     throw new Error("Error during sign out");
   }
 };
+export const addMyBike = async (BikeFormData: FormData) => {
+  const response = await fetch(`${API_BASE_URL}/api/my-bikes`, {
+    method: "POST",
+    credentials: "include",
+    body: BikeFormData,
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to add Bike");
+  }
+
+  return response.json();
+};
