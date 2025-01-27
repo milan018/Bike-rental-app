@@ -20,7 +20,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test("should allow user to add a Bike", async ({ page }) => {
-  await page.goto(`${UI_URL}my-bikes`);
+  await page.goto(`${UI_URL}add-bike`);
 
   await page.locator('[name="name"]').fill("Test Bike");
   await page.locator('[name="city"]').fill("Test City");
@@ -42,4 +42,20 @@ test("should allow user to add a Bike", async ({ page }) => {
 
   await page.getByRole("button", { name: "Save" }).click();
   await expect(page.getByText("Bike Saved!")).toBeVisible();
+});
+test("should display bikes  ", async ({ page }) => {
+  await page.goto(`${UI_URL}my-bikes`);
+
+  await expect(page.getByText("Dublin Getaways")).toBeVisible();
+  await expect(page.getByText("Lorem ipsum dolor sit amet")).toBeVisible();
+  await expect(page.getByText("Dublin, Ireland")).toBeVisible();
+  await expect(page.getByText("Road Bikes")).toBeVisible();
+  await expect(page.getByText("Rs119 per Day")).toBeVisible();
+
+  await expect(page.getByText("2 Star Rating")).toBeVisible();
+
+  await expect(
+    page.getByRole("link", { name: "View Details" }).first()
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: "Add Bike" })).toBeVisible();
 });

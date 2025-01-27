@@ -1,6 +1,7 @@
 import { RegisterFormData } from "./Pages/Register";
 import { SignInFormData } from "./Pages/SignIn";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+import { BikeType } from "../../backend/src/shared/types";
 
 export const register = async (formData: RegisterFormData) => {
   const response = await fetch(`${API_BASE_URL}/api/users/register`, {
@@ -70,5 +71,14 @@ export const addMyBike = async (BikeFormData: FormData) => {
     throw new Error("Failed to add Bike");
   }
 
+  return response.json();
+};
+export const fetchMyBikes = async (): Promise<BikeType[]> => {
+  const response = await fetch(`${API_BASE_URL}/api/my-bikes`, {
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error("Failed to fetch Bike");
+  }
   return response.json();
 };

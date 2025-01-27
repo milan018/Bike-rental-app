@@ -1,11 +1,12 @@
 import express, { Request, Response } from "express";
 import multer from "multer";
 import cloudinary from "cloudinary";
-import Bike, { BikeType } from "../models/Bike";
+import Bike from "../models/Bike";
 import verifyToken from "../middleware/auth";
 const router = express.Router();
 const storage = multer.memoryStorage();
 import { body } from "express-validator";
+import { BikeType } from "../shared/types";
 const upload = multer({
   storage: storage,
   limits: {
@@ -63,4 +64,12 @@ router.post(
     }
   }
 );
+router.get("/", verifyToken, async (req: Request, res: Response) => {
+  try {
+    const bikes = await Bike.find({ userId: req.userId });
+    res.json(bikes);
+  } catch (error) {
+    res.json(500).json({ message: "Error fetching Bikes" });
+  }
+});
 export default router;

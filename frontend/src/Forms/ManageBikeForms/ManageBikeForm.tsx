@@ -34,6 +34,7 @@ const ManageBikeForm = ({ onSave, isLoading }: Props) => {
     formData.append("type", formDataJson.type);
     formData.append("pricePerDay", formDataJson.pricePerDay.toString());
     formData.append("starRating", formDataJson.starRating.toString());
+
     formDataJson.facilities.forEach((facility, index) => {
       formData.append(`facilities[${index}]`, facility);
     });

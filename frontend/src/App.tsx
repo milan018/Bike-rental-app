@@ -5,6 +5,7 @@ import Register from "./Pages/Register";
 import SignIn from "./Pages/SignIn";
 import AddBike from "./Pages/AddBike";
 import { useAppContext } from "./contexts/AppContext";
+import MyBike from "./Pages/MyBike";
 
 const App = () => {
   const { isLoggedIn } = useAppContext();
@@ -44,15 +45,26 @@ const App = () => {
           }
         />
         {isLoggedIn && (
-          <Route
-            path="/my-bikes"
-            element={
-              <Layout>
-                {" "}
-                <AddBike />{" "}
-              </Layout>
-            }
-          />
+          <>
+            <Route
+              path="/add-bike"
+              element={
+                <Layout>
+                  {" "}
+                  <AddBike />{" "}
+                </Layout>
+              }
+            />
+            <Route
+              path="/my-bikes"
+              element={
+                <Layout>
+                  {" "}
+                  <MyBike />{" "}
+                </Layout>
+              }
+            />
+          </>
         )}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
