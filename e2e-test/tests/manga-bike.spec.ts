@@ -59,3 +59,22 @@ test("should display bikes  ", async ({ page }) => {
   ).toBeVisible();
   await expect(page.getByRole("link", { name: "Add Bike" })).toBeVisible();
 });
+test("should edit bike", async ({ page }) => {
+  await page.goto(`${UI_URL}my-bikes`);
+
+  await page.getByRole("link", { name: "View Details" }).first().click();
+
+  await page.waitForSelector('[name="name"]', { state: "attached" });
+  await expect(page.locator('[name="name"]')).toHaveValue("Dublin Getaways");
+  await page.locator('[name="name"]').fill("Dublin Getaways UPDATED");
+  await page.getByRole("button", { name: "Save" }).click();
+  await expect(page.getByText("Bike Saved!")).toBeVisible();
+
+  await page.reload();
+
+  await expect(page.locator('[name="name"]')).toHaveValue(
+    "Dublin Getaways UPDATED"
+  );
+  await page.locator('[name="name"]').fill("Dublin Getaways");
+  await page.getByRole("button", { name: "Save" }).click();
+});

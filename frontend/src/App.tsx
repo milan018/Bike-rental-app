@@ -6,6 +6,7 @@ import SignIn from "./Pages/SignIn";
 import AddBike from "./Pages/AddBike";
 import { useAppContext } from "./contexts/AppContext";
 import MyBike from "./Pages/MyBike";
+import EditBike from "./Pages/EditBike";
 
 const App = () => {
   const { isLoggedIn } = useAppContext();
@@ -52,6 +53,15 @@ const App = () => {
                 <Layout>
                   {" "}
                   <AddBike />{" "}
+                </Layout>
+              }
+            />
+            <Route
+              path="/edit-bike/:bikeId"
+              element={
+                <Layout>
+                  {" "}
+                  <EditBike />{" "}
                 </Layout>
               }
             />

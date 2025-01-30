@@ -82,3 +82,29 @@ export const fetchMyBikes = async (): Promise<BikeType[]> => {
   }
   return response.json();
 };
+export const fetchMyBikeById = async (bikeId: string) => {
+  const response = await fetch(`${API_BASE_URL}/api/my-bikes/${bikeId}`, {
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error("Error fetching bikes");
+  }
+  return response.json();
+};
+export const updateMyBikeById = async (bikeFormData: FormData) => {
+  const response = await fetch(
+    `${API_BASE_URL}/api/my-bikes/${bikeFormData.get("bikeId")}`,
+    {
+      method: "PUT",
+      body: bikeFormData,
+      credentials: "include",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to update Bike");
+  }
+
+  return response.json();
+};
+
