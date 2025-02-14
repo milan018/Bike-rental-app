@@ -16,3 +16,11 @@ export type BikeType = {
   imageUrls: string[];
   lastUpdated: Date;
 };
+export type BikeSearchResponse = {
+  data: BikeType[];
+  pagination: {
+    total: number;
+    page: number;
+    pages: number;
+  };
+};

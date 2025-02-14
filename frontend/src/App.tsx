@@ -7,6 +7,7 @@ import AddBike from "./Pages/AddBike";
 import { useAppContext } from "./contexts/AppContext";
 import MyBike from "./Pages/MyBike";
 import EditBike from "./Pages/EditBike";
+import Search from "./Pages/Search";
 
 const App = () => {
   const { isLoggedIn } = useAppContext();
@@ -25,7 +26,7 @@ const App = () => {
           path="/Search"
           element={
             <Layout>
-              <p>Search Page</p>{" "}
+              <Search />
             </Layout>
           }
         />
