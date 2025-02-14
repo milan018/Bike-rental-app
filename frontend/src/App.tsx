@@ -8,6 +8,7 @@ import { useAppContext } from "./contexts/AppContext";
 import MyBike from "./Pages/MyBike";
 import EditBike from "./Pages/EditBike";
 import Search from "./Pages/Search";
+import Detail from "./Pages/Detail";
 
 const App = () => {
   const { isLoggedIn } = useAppContext();
@@ -27,6 +28,14 @@ const App = () => {
           element={
             <Layout>
               <Search />
+            </Layout>
+          }
+        />
+        <Route
+          path="/detail/:bikeId"
+          element={
+            <Layout>
+              <Detail />
             </Layout>
           }
         />

@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import Bike from "../models/Bike";
 import { BikeSearchResponse } from "../shared/types";
+import { param, validationResult } from "express-validator";
 const router = express.Router();
 router.get("/search", async (req: Request, res: Response) => {
   try {
@@ -39,9 +40,29 @@ router.get("/search", async (req: Request, res: Response) => {
     res.json(response);
   } catch (error) {
     console.log("error", error);
-    res.status(500).json({ message: "Soething went wrong" });
+    res.status(500).json({ message: "Something went wrong" });
   }
 });
+router.get(
+  "/:id",
+  [param("id").notEmpty().withMessage("Bike ID is required")],
+  async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const id = req.params.id.toString();
+
+    try {
+      const bike = await Bike.findById(id);
+      res.json(bike);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Error fetching Bike" });
+    }
+  }
+);
 const constructSearchQuery = (queryParams: any) => {
   let constructedQuery: any = {};
 

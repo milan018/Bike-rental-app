@@ -19,4 +19,10 @@ export const BikeFacilites = [
   "Tyre Puncture Kit with Portable Inflator",
   "Extensive Tool Kit",
   "Liquid Cooling",
+  "Helmets",
+  "Baskets and Storage Options",
+  "24/7 Rental Availability",
+  "Easy Booking and Cancellation",
+  "Insurance Coverage Options",
+  "Emergency Assistance and Support",
 ];

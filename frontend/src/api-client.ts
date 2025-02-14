@@ -150,3 +150,11 @@ export const searchBikes = async (
 
   return response.json();
 };
+export const fetchBikeById = async (bikeId: string): Promise<BikeType> => {
+  const response = await fetch(`${API_BASE_URL}/api/bikes/${bikeId}`);
+  if (!response.ok) {
+    throw new Error("Error fetching Hotels");
+  }
+
+  return response.json();
+};
