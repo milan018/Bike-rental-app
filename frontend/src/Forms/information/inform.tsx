@@ -25,7 +25,6 @@ const InfoForm = ({ bikeId, pricePerDay }: Props) => {
 
     handleSubmit,
     setValue,
-    formState: { errors },
   } = useForm<GuestInfoFormData>({
     defaultValues: {
       checkIn: search.checkIn,
