@@ -1,5 +1,14 @@
 import mongoose from "mongoose";
-import { BikeType } from "../shared/types";
+import { BikeType, BookingType } from "../shared/types";
+const bookingSchema = new mongoose.Schema<BookingType>({
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  email: { type: String, required: true },
+  checkIn: { type: Date, required: true },
+  checkOut: { type: Date, required: true },
+  userId: { type: String, required: true },
+  totalCost: { type: Number, required: true },
+});
 
 // Define the BikeType interface
 
@@ -20,6 +29,7 @@ const bikeSchema = new mongoose.Schema<BikeType>({
   starRating: { type: Number, required: true, min: 1, max: 5 },
   imageUrls: [{ type: String, required: true }],
   lastUpdated: { type: Date, required: true, default: Date.now },
+  bookings: [bookingSchema],
 });
 
 // Create the Mongoose model

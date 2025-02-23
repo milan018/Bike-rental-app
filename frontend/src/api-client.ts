@@ -1,7 +1,22 @@
 import { RegisterFormData } from "./Pages/Register";
 import { SignInFormData } from "./Pages/SignIn";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
-import { BikeSearchResponse, BikeType } from "../../backend/src/shared/types";
+import {
+  BikeSearchResponse,
+  BikeType,
+  UserType,
+  PaymentIntentResponse,
+} from "../../backend/src/shared/types";
+import { BookingFormData } from "./Forms/BookingForm/BookingForm";
+export const fetchCurrentUser = async (): Promise<UserType> => {
+  const response = await fetch(`${API_BASE_URL}/api/users/me`, {
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error("Error fetching user");
+  }
+  return response.json();
+};
 
 export const register = async (formData: RegisterFormData) => {
   const response = await fetch(`${API_BASE_URL}/api/users/register`, {
@@ -157,4 +172,66 @@ export const fetchBikeById = async (bikeId: string): Promise<BikeType> => {
   }
 
   return response.json();
+};
+/*export const createEsewaPayment = async (
+  bikeId: string,
+  numberOfDays: string
+): Promise<{ paymentUrl: string; totalCost: number }> => {
+  const response = await fetch(
+    `${API_BASE_URL}/api/bikes/${bikeId}/bookings/initiate`,
+    {
+      credentials: "include",
+      method: "POST",
+      body: JSON.stringify({ numberOfDays }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Error creating eSewa payment");
+  }
+
+  return response.json();
+};
+*/ export const createPaymentIntent = async (
+  bikeId: string,
+  numberOfDays: string
+): Promise<PaymentIntentResponse> => {
+  const response = await fetch(
+    `${API_BASE_URL}/api/bikes/${bikeId}/bookings/payment-intent`,
+    {
+      credentials: "include",
+      method: "POST",
+      body: JSON.stringify({ numberOfDays }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Error fetching payment intent");
+  }
+
+  return response.json();
+};
+
+export const createBikeBooking = async (formData: BookingFormData) => {
+  const response = await fetch(
+    `${API_BASE_URL}/api/bikes/${formData.bikeId}/bookings`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify(formData),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Error booking bike");
+  }
 };
