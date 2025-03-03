@@ -7,6 +7,7 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 import { body } from "express-validator";
 import { BikeType } from "../shared/types";
+import adminAuth from "../middleware/adminAuth";
 const upload = multer({
   storage: storage,
   limits: {
@@ -18,6 +19,7 @@ const upload = multer({
 router.post(
   "/",
   verifyToken,
+  adminAuth,
   [
     body("name").notEmpty().withMessage("Name is required"),
     body("city").notEmpty().withMessage("City is required"),
@@ -80,6 +82,7 @@ router.get("/:id", verifyToken, async (req: Request, res: Response) => {
 router.put(
   "/:bikeId",
   verifyToken,
+  adminAuth,
   upload.array("imageFiles"),
   async (req: Request, res: Response) => {
     try {

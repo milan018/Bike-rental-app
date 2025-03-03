@@ -1,6 +1,6 @@
 export const BikeTypes = [
   "Road Bikes",
-  " Hybrid Bikes",
+  "Hybrid Bikes",
   "Electric Bikes (E-Bikes)",
   "Mountain Bikes",
   "Cargo Bikes",
@@ -11,6 +11,7 @@ export const BikeTypes = [
   "Sport bikes",
   "Cruisers",
 ];
+
 export const BikeFacilites = [
   "Dual-Channel ABS",
   "Adjustable Suspension",
@@ -25,4 +26,15 @@ export const BikeFacilites = [
   "Easy Booking and Cancellation",
   "Insurance Coverage Options",
   "Emergency Assistance and Support",
+];
+
+export const manufaturersTypes = [
+  "Yamaha Nepal",
+  "TVS Nepal",
+  "Royal Enfield",
+  "KTM Nepal",
+  "Ducati and Benelli",
+  "Honda",
+  "Hero",
+  "Bajaj",
 ];

@@ -16,6 +16,7 @@ const bookingSchema = new mongoose.Schema<BookingType>({
 const bikeSchema = new mongoose.Schema<BikeType>({
   userId: { type: String, required: true },
   name: { type: String, required: true },
+  manufacturers: { type: String, required: true },
   city: { type: String, required: true },
   country: { type: String, required: true },
   description: { type: String, required: true },

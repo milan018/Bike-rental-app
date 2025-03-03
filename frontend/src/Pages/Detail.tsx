@@ -3,12 +3,14 @@ import { useParams } from "react-router-dom";
 import * as apiClient from "./../api-client";
 import { AiFillStar } from "react-icons/ai";
 import InfoForm from "../Forms/information/inform";
+import Reviews from "../components/Reviews";
+import AddReview from "../components/AddReview";
 
 const Detail = () => {
   const { bikeId } = useParams();
 
   const { data: bike } = useQuery(
-    "fetchHotelById",
+    "fetchBikeById",
     () => apiClient.fetchBikeById(bikeId || ""),
     {
       enabled: !!bikeId,
@@ -55,6 +57,12 @@ const Detail = () => {
         <div className="h-fit">
           <InfoForm pricePerDay={bike.pricePerDay} bikeId={bike._id} />
         </div>
+      </div>
+      <div className="p-6">
+        <h2 className="text-2xl font-bold">Bike Details</h2>
+        {/* Bike details go here */}
+        <Reviews bikeId={bikeId!} />
+        <AddReview bikeId={bikeId!} />
       </div>
     </div>
   );

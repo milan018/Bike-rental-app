@@ -5,9 +5,11 @@ import FacilitiesSection from "./FacilitiesSection";
 import ImagesSection from "./ImageSection";
 import { BikeType } from "../../../../backend/src/shared/types";
 import { useEffect } from "react";
+import ManufacturerstypesSection from "./Manufacturerstypes";
 
 export type BikeFormData = {
   name: string;
+  manufacturers: string;
   city: string;
   country: string;
   description: string;
@@ -38,6 +40,7 @@ const ManageBikeForm = ({ onSave, isLoading, bike }: Props) => {
       formData.append("bikeId", bike._id);
     }
     formData.append("name", formDataJson.name);
+    formData.append("manufacturers", formDataJson.manufacturers);
     formData.append("city", formDataJson.city);
     formData.append("country", formDataJson.country);
     formData.append("description", formDataJson.description);
@@ -65,6 +68,7 @@ const ManageBikeForm = ({ onSave, isLoading, bike }: Props) => {
       <form className="flex flex-col gap-10" onSubmit={onSubmit}>
         <DetailsSection />
         <TypeSection />
+        <ManufacturerstypesSection />
         <FacilitiesSection />
         <ImagesSection />
         <span className="flex justify-end">

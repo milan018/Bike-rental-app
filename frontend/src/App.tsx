@@ -10,9 +10,11 @@ import EditBike from "./Pages/EditBike";
 import Search from "./Pages/Search";
 import Detail from "./Pages/Detail";
 import Booking from "./Pages/Booking";
+import MyBookings from "./Pages/MyBookings";
+import Home from "./Pages/Home";
 
 const App = () => {
-  const { isLoggedIn } = useAppContext();
+  const { isLoggedIn, user } = useAppContext();
   return (
     <BrowserRouter>
       <Routes>
@@ -20,7 +22,7 @@ const App = () => {
           path="/"
           element={
             <Layout>
-              <p>Home Page</p>{" "}
+              <Home />
             </Layout>
           }
         />
@@ -66,30 +68,41 @@ const App = () => {
                 </Layout>
               }
             />
-            <Route
-              path="/add-bike"
-              element={
-                <Layout>
-                  {" "}
-                  <AddBike />{" "}
-                </Layout>
-              }
-            />
-            <Route
-              path="/edit-bike/:bikeId"
-              element={
-                <Layout>
-                  {" "}
-                  <EditBike />{" "}
-                </Layout>
-              }
-            />
+            {user?.role === "admin" && (
+              <>
+                <Route
+                  path="/add-bike"
+                  element={
+                    <Layout>
+                      <AddBike />
+                    </Layout>
+                  }
+                />
+                <Route
+                  path="/edit-bike/:bikeId"
+                  element={
+                    <Layout>
+                      <EditBike />
+                    </Layout>
+                  }
+                />
+              </>
+            )}
+
             <Route
               path="/my-bikes"
               element={
                 <Layout>
                   {" "}
                   <MyBike />{" "}
+                </Layout>
+              }
+            />
+            <Route
+              path="/my-bookings"
+              element={
+                <Layout>
+                  <MyBookings />
                 </Layout>
               }
             />

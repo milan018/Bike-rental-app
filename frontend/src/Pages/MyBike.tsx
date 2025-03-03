@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import * as apiClient from "../api-client";
 import { BsBuilding, BsMap } from "react-icons/bs";
 import { BiMoney, BiStar } from "react-icons/bi";
-
+import { MdSportsMotorsports } from "react-icons/md";
 const MyBikes = () => {
   const { data: BikeData } = useQuery("fetchMyBikes", apiClient.fetchMyBikes, {
     onError: () => {},
@@ -40,6 +40,10 @@ const MyBikes = () => {
               <div className="border border-slate-300 rounded-sm p-3 flex items-center">
                 <BsBuilding className="mr-1" />
                 {Bike.type}
+              </div>
+              <div className="border border-slate-300 rounded-sm p-3 flex items-center">
+                <MdSportsMotorsports className="mr-1" />
+                {Bike.manufacturers}
               </div>
               <div className="border border-slate-300 rounded-sm p-3 flex items-center">
                 <BiMoney className="mr-1" />

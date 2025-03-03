@@ -124,13 +124,14 @@ export const updateMyBikeById = async (bikeFormData: FormData) => {
 };
 
 export type SearchParams = {
-  destination?: string;
+  name?: string;
   checkIn?: string;
   checkOut?: string;
 
   page?: string;
   facilities?: string[];
   types?: string[];
+  manufacturers?: string[];
   stars?: string[];
   maxPrice?: string;
   sortOption?: string;
@@ -139,7 +140,7 @@ export const searchBikes = async (
   searchParams: SearchParams
 ): Promise<BikeSearchResponse> => {
   const queryParams = new URLSearchParams();
-  queryParams.append("destination", searchParams.destination || "");
+  queryParams.append("name", searchParams.name || "");
   queryParams.append("checkIn", searchParams.checkIn || "");
   queryParams.append("checkOut", searchParams.checkOut || "");
 
@@ -153,6 +154,9 @@ export const searchBikes = async (
   );
 
   searchParams.types?.forEach((type) => queryParams.append("types", type));
+  searchParams.manufacturers?.forEach(
+    (manufacturer) => queryParams.append("manufacturers", manufacturer) // Corrected typo here
+  );
   searchParams.stars?.forEach((star) => queryParams.append("stars", star));
 
   const response = await fetch(
@@ -163,6 +167,13 @@ export const searchBikes = async (
     throw new Error("Error fetching hotels");
   }
 
+  return response.json();
+};
+export const fetchBikes = async (): Promise<BikeType[]> => {
+  const response = await fetch(`${API_BASE_URL}/api/bikes`);
+  if (!response.ok) {
+    throw new Error("Error fetching bikes");
+  }
   return response.json();
 };
 export const fetchBikeById = async (bikeId: string): Promise<BikeType> => {
@@ -234,4 +245,15 @@ export const createBikeBooking = async (formData: BookingFormData) => {
   if (!response.ok) {
     throw new Error("Error booking bike");
   }
+};
+export const fetchMyBookings = async (): Promise<BikeType[]> => {
+  const response = await fetch(`${API_BASE_URL}/api/my-bookings`, {
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    throw new Error("Unable to fetch bookings");
+  }
+
+  return response.json();
 };

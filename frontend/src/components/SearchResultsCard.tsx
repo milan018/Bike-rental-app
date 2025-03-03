@@ -23,6 +23,9 @@ const SearchResultsCard = ({ bike }: Props) => {
               ))}
             </span>
             <span className="ml-1 text-sm">{bike.type}</span>
+            <span className="ml-1  font-bold text-sm">
+              {bike.manufacturers}
+            </span>
           </div>
           <Link
             to={`/detail/${bike._id}`}

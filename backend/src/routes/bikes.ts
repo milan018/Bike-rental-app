@@ -46,6 +46,15 @@ router.get("/search", async (req: Request, res: Response) => {
     res.status(500).json({ message: "Something went wrong" });
   }
 });
+router.get("/", async (req: Request, res: Response) => {
+  try {
+    const bikes = await Bike.find().sort("-lastUpdated");
+    res.json(bikes);
+  } catch (error) {
+    console.log("error", error);
+    res.status(500).json({ message: "Error fetching bikes" });
+  }
+});
 router.get(
   "/:id",
   [param("id").notEmpty().withMessage("Bike ID is required")],
@@ -136,18 +145,18 @@ router.post(
         userId: req.userId,
       };
 
-      const hotel = await Bike.findOneAndUpdate(
+      const bike = await Bike.findOneAndUpdate(
         { _id: req.params.bikeId },
         {
           $push: { bookings: newBooking },
         }
       );
 
-      if (!hotel) {
-        return res.status(400).json({ message: "hotel not found" });
+      if (!bike) {
+        return res.status(400).json({ message: "bike not found" });
       }
 
-      await hotel.save();
+      await bike.save();
       res.status(200).send();
     } catch (error) {
       console.log(error);
@@ -425,7 +434,14 @@ const constructSearchQuery = (queryParams: any) => {
         : [queryParams.types],
     };
   }
-
+  if (queryParams.manufacturers) {
+    constructedQuery.manufacturers = {
+      // <-- Corrected field name
+      $in: Array.isArray(queryParams.manufacturers)
+        ? queryParams.manufacturers
+        : [queryParams.manufacturers],
+    };
+  }
   if (queryParams.stars) {
     const starRatings = Array.isArray(queryParams.stars)
       ? queryParams.stars.map((star: string) => parseInt(star))

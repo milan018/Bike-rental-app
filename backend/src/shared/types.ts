@@ -4,11 +4,13 @@ export type UserType = {
   password: string;
   firstName: string;
   lastName: string;
+  role: "user" | "admin";
 };
 export type BikeType = {
   _id: string; // Use lowercase `string`
   userId: string;
   name: string;
+  manufacturers: string;
   city: string;
   country: string;
   description: string;

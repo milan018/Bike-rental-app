@@ -8,12 +8,16 @@ import StarRatingFilter from "../components/StarRatingFilter";
 import BikeTypesFilter from "../components/BikeTypesFilter";
 import FacilitiesFilter from "../components/FacilitiesFilter";
 import PriceFilter from "../components/PriceFilter";
+import ManuFactureTypesFilter from "../components/ManuFactureTypesFilter";
 
 const Search = () => {
   const search = useSearchContext();
   const [page, setPage] = useState<number>(1);
   const [selectedStars, setSelectedStars] = useState<string[]>([]);
   const [selectedBikeTypes, setSelectedBikeTypes] = useState<string[]>([]);
+  const [selectedManufactureTypes, setSelectedManufactureTypes] = useState<
+    string[]
+  >([]);
   const [selectedFacilities, setSelectedFacilities] = useState<string[]>([]);
   const [selectedPrice, setSelectedPrice] = useState<number | undefined>();
   const [sortOption, setSortOption] = useState<string>("");
@@ -26,6 +30,7 @@ const Search = () => {
     page: page.toString(),
     stars: selectedStars,
     types: selectedBikeTypes,
+    manufacturers: selectedManufactureTypes,
     facilities: selectedFacilities,
     maxPrice: selectedPrice?.toString(),
     sortOption,
@@ -54,6 +59,16 @@ const Search = () => {
         : prevBikeTypes.filter((bike) => bike !== bikeType)
     );
   };
+  const handleManufactureTypeChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const manufacturerType = event.target.value;
+    setSelectedManufactureTypes((prevManufactureTypes) =>
+      event.target.checked
+        ? [...prevManufactureTypes, manufacturerType]
+        : prevManufactureTypes.filter((type) => type !== manufacturerType)
+    );
+  };
 
   const handleFacilityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const facility = event.target.value;
@@ -79,6 +94,10 @@ const Search = () => {
           <BikeTypesFilter
             selectedBikeTypes={selectedBikeTypes}
             onChange={handleBikeTypeChange}
+          />
+          <ManuFactureTypesFilter
+            selectedManufactureTypes={selectedManufactureTypes}
+            onChange={handleManufactureTypeChange}
           />
           <FacilitiesFilter
             selectedFacilities={selectedFacilities}

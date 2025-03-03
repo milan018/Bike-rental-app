@@ -47,7 +47,7 @@ router.post(
       }
 
       // Create a new user
-      user = new User({ firstName, lastName, email, password });
+      user = new User({ firstName, lastName, email, password, role: "user" });
       await user.save();
 
       // Generate a JWT token
@@ -71,6 +71,7 @@ router.post(
           firstName: user.firstName,
           lastName: user.lastName,
           email: user.email,
+          role: user.role,
         },
       });
     } catch (error) {
