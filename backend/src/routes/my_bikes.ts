@@ -31,6 +31,10 @@ router.post(
       .notEmpty()
       .isNumeric()
       .withMessage("Price per day is required and must be a number"),
+    body("pricePerHour")
+      .notEmpty()
+      .isNumeric()
+      .withMessage("Price per Hour is required and must be a number"),
     body("facilities")
       .notEmpty()
       .isArray()

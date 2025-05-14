@@ -79,15 +79,20 @@ router.post(
   "/:bikeId/bookings/payment-intent",
   verifyToken,
   async (req: Request, res: Response) => {
-    const { numberOfDays } = req.body;
+    const { rentalType, numberOfDays, numberOfHours } = req.body;
     const bikeId = req.params.bikeId;
 
     const bike = await Bike.findById(bikeId);
     if (!bike) {
       return res.status(400).json({ message: "Bike not found" });
     }
-
-    const totalCost = bike.pricePerDay * numberOfDays;
+    let totalCost = 0;
+    if (rentalType === "hourly" && numberOfHours) {
+      totalCost = bike.pricePerHour * numberOfHours;
+    } else {
+      totalCost = bike.pricePerDay * numberOfDays;
+    }
+    //const totalCost = bike.pricePerDay * numberOfDays;
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: totalCost * 100,
@@ -417,6 +422,13 @@ const constructSearchQuery = (queryParams: any) => {
       { city: new RegExp(queryParams.destination, "i") },
       { country: new RegExp(queryParams.destination, "i") },
     ];
+  }
+  if (queryParams.rentalType) {
+    if (queryParams.rentalType === "hourly") {
+      constructedQuery.pricePerHour = { $exists: true };
+    } else {
+      constructedQuery.pricePerDay = { $exists: true };
+    }
   }
 
   if (queryParams.facilities) {

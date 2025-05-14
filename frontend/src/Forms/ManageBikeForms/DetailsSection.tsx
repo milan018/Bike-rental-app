@@ -68,6 +68,18 @@ const DetailsSection = () => {
         )}
       </label>
       <label className="text-gray-700 text-sm font-bold max-w-[50%]">
+        Price Per Hour
+        <input
+          type="number"
+          min={1}
+          className="border rounded w-full py-1 px-2 font-normal"
+          {...register("pricePerHour", { required: "This field is required" })}
+        ></input>
+        {errors.pricePerDay && (
+          <span className="text-red-500">{errors.pricePerDay.message}</span>
+        )}
+      </label>
+      <label className="text-gray-700 text-sm font-bold max-w-[50%]">
         Star Rating
         <select
           {...register("starRating", {

@@ -5,6 +5,8 @@ type Props = {
   checkOut: Date;
   numberOfDays: number;
   bike: BikeType;
+  numberofHours: number;
+  rentalType: "daily" | "hourly";
 };
 
 const BookingDetailsSummary = ({
@@ -12,6 +14,8 @@ const BookingDetailsSummary = ({
   checkOut,
 
   numberOfDays,
+  numberofHours,
+  rentalType,
   bike,
 }: Props) => {
   return (
@@ -24,16 +28,20 @@ const BookingDetailsSummary = ({
       <div className="flex justify-between">
         <div>
           Check-in
-          <div className="font-bold"> {checkIn.toDateString()}</div>
+          <div className="font-bold"> {checkIn.toLocaleString()}</div>
         </div>
         <div>
           Check-out
-          <div className="font-bold"> {checkOut.toDateString()}</div>
+          <div className="font-bold"> {checkOut.toLocaleString()}</div>
         </div>
       </div>
       <div className="border-t border-b py-2">
-        Total length of stay:
-        <div className="font-bold">{numberOfDays} days</div>
+        Rental period:
+        <div className="font-bold">
+          {rentalType === "daily"
+            ? `${numberOfDays} days`
+            : `${numberofHours} hours`}
+        </div>
       </div>
     </div>
   );

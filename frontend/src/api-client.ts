@@ -164,7 +164,7 @@ export const searchBikes = async (
   );
 
   if (!response.ok) {
-    throw new Error("Error fetching hotels");
+    throw new Error("Error fetching bikess");
   }
 
   return response.json();
@@ -208,14 +208,16 @@ export const fetchBikeById = async (bikeId: string): Promise<BikeType> => {
 };
 */ export const createPaymentIntent = async (
   bikeId: string,
-  numberOfDays: string
+  numberOfDays: string,
+  numberOfHours: string,
+  rentalType: string
 ): Promise<PaymentIntentResponse> => {
   const response = await fetch(
     `${API_BASE_URL}/api/bikes/${bikeId}/bookings/payment-intent`,
     {
       credentials: "include",
       method: "POST",
-      body: JSON.stringify({ numberOfDays }),
+      body: JSON.stringify({ numberOfDays, numberOfHours, rentalType }),
       headers: {
         "Content-Type": "application/json",
       },

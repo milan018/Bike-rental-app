@@ -49,7 +49,10 @@ const MyBikes = () => {
                 <BiMoney className="mr-1" />
                 Rs{Bike.pricePerDay} per Day
               </div>
-
+              <div className="border border-slate-300 rounded-sm p-3 flex items-center">
+                <BiMoney className="mr-1" />
+                Rs{Bike.pricePerHour} per Hour
+              </div>
               <div className="border border-slate-300 rounded-sm p-3 flex items-center">
                 <BiStar className="mr-1" />
                 {Bike.starRating} Star Rating

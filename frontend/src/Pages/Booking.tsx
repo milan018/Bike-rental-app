@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import * as apiClient from "../api-client";
 
 import { useSearchContext } from "../contexts/SearchContext";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import BookingForm from "../Forms/BookingForm/BookingForm";
@@ -12,27 +12,51 @@ import { useAppContext } from "../contexts/AppContext";
 
 const Booking = () => {
   const search = useSearchContext();
+  const { rentalType: contextRentalType } = useSearchContext();
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+
+  const rentalTypeFromQuery = params.get("type") as "hourly" | "daily";
+  const rentalTypeFromContext = contextRentalType as "hourly" | "daily";
   const { bikeId } = useParams();
   const { stripePromise } = useAppContext();
+  const [rentalType] = useState<"daily" | "hourly">(
+    rentalTypeFromQuery || rentalTypeFromContext || "daily"
+  );
   const [numberOfDays, setNumberOfDays] = useState<number>(0);
+  const [numberOfHours, setNumberOfHours] = useState<number>(0);
 
   useEffect(() => {
     if (search.checkIn && search.checkOut) {
-      const days =
-        Math.abs(search.checkOut.getTime() - search.checkIn.getTime()) /
-        (1000 * 60 * 60 * 24);
+      const timeDifference = Math.abs(
+        search.checkOut.getTime() - search.checkIn.getTime()
+      );
 
-      setNumberOfDays(Math.ceil(days));
+      if (rentalType === "daily") {
+        const days = timeDifference / (1000 * 60 * 60 * 24);
+        setNumberOfDays(Math.ceil(days));
+        setNumberOfHours(0);
+      } else {
+        const hours = timeDifference / (1000 * 60 * 60);
+        setNumberOfHours(Math.ceil(hours));
+        setNumberOfDays(0);
+      }
     }
-  }, [search.checkIn, search.checkOut]);
+  }, [search.checkIn, search.checkOut, rentalType]);
   const { data: paymentIntentData } = useQuery(
     "createPaymentIntent",
     () =>
-      apiClient.createPaymentIntent(bikeId as string, numberOfDays.toString()),
+      apiClient.createPaymentIntent(
+        bikeId as string,
+        numberOfDays.toString(),
+        numberOfHours.toString(),
+        rentalType as string
+      ),
     {
-      enabled: !!bikeId && numberOfDays > 0,
+      enabled: !!bikeId && (numberOfDays > 0 || numberOfHours > 0),
     }
   );
+
   const { data: bike } = useQuery(
     "fetchBikeByID",
     () => apiClient.fetchBikeById(bikeId as string),
@@ -56,7 +80,9 @@ const Booking = () => {
         checkIn={search.checkIn}
         checkOut={search.checkOut}
         numberOfDays={numberOfDays}
+        numberofHours={numberOfHours}
         bike={bike}
+        rentalType={rentalType}
       />
       {currentUser && paymentIntentData && paymentIntentData.clientSecret && (
         <Elements
@@ -69,6 +95,9 @@ const Booking = () => {
           <BookingForm
             currentUser={currentUser}
             paymentIntent={paymentIntentData}
+            rentalType={rentalType}
+            numberOfDays={numberOfDays}
+            numberOfHours={numberOfHours}
           />
         </Elements>
       )}

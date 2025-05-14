@@ -142,6 +142,9 @@ import { useAppContext } from "../../contexts/AppContext";
 type Props = {
   currentUser: UserType;
   paymentIntent: PaymentIntentResponse;
+  rentalType: "daily" | "hourly";
+  numberOfDays: number;
+  numberOfHours: number;
 };
 
 export type BookingFormData = {
@@ -154,9 +157,18 @@ export type BookingFormData = {
   bikeId: string;
   paymentIntentId: string;
   totalCost: number;
+  rentalType: "daily" | "hourly";
+  numberOfDays: number;
+  numberOfHours: number;
 };
 
-const BookingForm = ({ currentUser, paymentIntent }: Props) => {
+const BookingForm = ({
+  currentUser,
+  paymentIntent,
+  rentalType,
+  numberOfDays,
+  numberOfHours,
+}: Props) => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -188,6 +200,9 @@ const BookingForm = ({ currentUser, paymentIntent }: Props) => {
       bikeId: bikeId,
       totalCost: paymentIntent.totalCost,
       paymentIntentId: paymentIntent.paymentIntentId,
+      rentalType,
+      numberOfDays,
+      numberOfHours,
     },
   });
 
@@ -251,7 +266,7 @@ const BookingForm = ({ currentUser, paymentIntent }: Props) => {
 
         <div className="bg-blue-200 p-4 rounded-md">
           <div className="font-semibold text-lg">
-            Total Cost: £{paymentIntent.totalCost.toFixed(2)}
+            Total Cost: RS{paymentIntent.totalCost.toFixed(2)}
           </div>
           <div className="text-xs">Includes taxes and charges</div>
         </div>

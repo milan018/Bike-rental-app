@@ -55,7 +55,11 @@ const Detail = () => {
       <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr]">
         <div className="whitespace-pre-line">{bike.description}</div>
         <div className="h-fit">
-          <InfoForm pricePerDay={bike.pricePerDay} bikeId={bike._id} />
+          <InfoForm
+            pricePerHour={bike.pricePerHour}
+            pricePerDay={bike.pricePerDay}
+            bikeId={bike._id}
+          />
         </div>
       </div>
       <div className="p-6">

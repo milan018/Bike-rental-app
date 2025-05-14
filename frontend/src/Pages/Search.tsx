@@ -24,6 +24,7 @@ const Search = () => {
 
   const searchParams = {
     destination: search.destination,
+    rentalType: search.rentalType, // Include rental type
     checkIn: search.checkIn.toISOString(),
     checkOut: search.checkOut.toISOString(),
 

@@ -1,18 +1,18 @@
 import mongoose from "mongoose";
 import { BikeType, BookingType } from "../shared/types";
+
 const bookingSchema = new mongoose.Schema<BookingType>({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true },
+  rentalType: { type: String, enum: ["hourly", "daily"], required: true }, // New field
   checkIn: { type: Date, required: true },
   checkOut: { type: Date, required: true },
   userId: { type: String, required: true },
   totalCost: { type: Number, required: true },
 });
 
-// Define the BikeType interface
-
-// Define the Mongoose schema
+// Define the BikeType schema
 const bikeSchema = new mongoose.Schema<BikeType>({
   userId: { type: String, required: true },
   name: { type: String, required: true },
@@ -24,6 +24,7 @@ const bikeSchema = new mongoose.Schema<BikeType>({
   color: { type: String, required: false },
   Mileage: { type: Number, required: false },
   pricePerDay: { type: Number, required: true },
+  pricePerHour: { type: Number, required: true }, // Added for hourly rentals
   Fuel_Type: { type: String, required: false },
   Weight_Cpacity: { type: Number, required: false },
   facilities: [{ type: String, required: true }],

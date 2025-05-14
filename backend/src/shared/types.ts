@@ -18,6 +18,7 @@ export type BikeType = {
   color: string;
   Mileage: number;
   pricePerDay: number;
+  pricePerHour: number;
   Fuel_Type: string;
   Weight_Cpacity: number;
   facilities: string[];
@@ -27,14 +28,17 @@ export type BikeType = {
   bookings: BookingType[];
 };
 export type BookingType = {
+  checkOut: string | number | Date;
+  checkIn: string | number | Date;
   _id: string;
   userId: string;
   firstName: string;
   lastName: string;
   email: string;
-  checkIn: Date;
-  checkOut: Date;
+  startTime: Date;
+  endTime: Date;
   totalCost: number;
+  rentalType: string;
 };
 export type BikeSearchResponse = {
   data: BikeType[];

@@ -15,6 +15,7 @@ export type BikeFormData = {
   description: string;
   type: string;
   pricePerDay: number;
+  pricePerHour: number;
   starRating: number;
   facilities: string[];
   imageFiles: FileList;
@@ -46,6 +47,7 @@ const ManageBikeForm = ({ onSave, isLoading, bike }: Props) => {
     formData.append("description", formDataJson.description);
     formData.append("type", formDataJson.type);
     formData.append("pricePerDay", formDataJson.pricePerDay.toString());
+    formData.append("pricePerHour", formDataJson.pricePerHour.toString());
     formData.append("starRating", formDataJson.starRating.toString());
 
     formDataJson.facilities.forEach((facility, index) => {
