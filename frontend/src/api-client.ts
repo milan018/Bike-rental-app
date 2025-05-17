@@ -97,6 +97,19 @@ export const fetchMyBikes = async (): Promise<BikeType[]> => {
   }
   return response.json();
 };
+// DELETE bike by ID
+export const deleteMyBikeById = async (bikeId: string) => {
+  const response = await fetch(`${API_BASE_URL}/api/my-bikes/${bikeId}`, {
+    method: "DELETE",
+    credentials: "include", // if you're using cookies for auth
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete bike");
+  }
+
+  return response.json();
+};
 export const fetchMyBikeById = async (bikeId: string) => {
   const response = await fetch(`${API_BASE_URL}/api/my-bikes/${bikeId}`, {
     credentials: "include",
@@ -255,6 +268,24 @@ export const fetchMyBookings = async (): Promise<BikeType[]> => {
 
   if (!response.ok) {
     throw new Error("Unable to fetch bookings");
+  }
+
+  return response.json();
+};
+export const cancelBooking = async (bikeId: string, bookingId: string) => {
+  const response = await fetch(
+    `${API_BASE_URL}/api/my-bookings/${bikeId}/${bookingId}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to cancel booking");
   }
 
   return response.json();

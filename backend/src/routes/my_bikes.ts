@@ -51,8 +51,8 @@ router.post(
       newBike.imageUrls = imageUrls;
       newBike.lastUpdated = new Date();
       newBike.userId = req.userId;
-      //if upload was successful ,add the URLS to the new hotel
-      //save the new hotel in our database
+      //if upload was successful ,add the URLS to the new Bike
+      //save the new Bike in our database
       const bike = new Bike(newBike);
       await bike.save();
       //return a 201 status
@@ -131,4 +131,31 @@ async function uploadImages(imageFiles: Express.Multer.File[]) {
   const imageUrls = await Promise.all(uploadPromises);
   return imageUrls;
 }
+router.delete(
+  "/:bikeId",
+  verifyToken,
+  adminAuth,
+  async (req: Request, res: Response) => {
+    try {
+      const { bikeId } = req.params;
+
+      const bike = await Bike.findOneAndDelete({
+        _id: bikeId,
+        userId: req.userId,
+      });
+
+      if (!bike) {
+        return res
+          .status(404)
+          .json({ message: "Bike not found or unauthorized" });
+      }
+
+      res.status(200).json({ message: "Bike deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting bike:", error);
+      res.status(500).json({ message: "Something went wrong" });
+    }
+  }
+);
+
 export default router;

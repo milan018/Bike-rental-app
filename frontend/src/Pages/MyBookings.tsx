@@ -1,7 +1,10 @@
-import { useQuery } from "react-query";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { useQuery, useQueryClient } from "react-query";
 import * as apiClient from "../api-client";
 
 const MyBookings = () => {
+  const queryClient = useQueryClient();
+
   const { data: bikes } = useQuery(
     "fetchMyBookings",
     apiClient.fetchMyBookings
@@ -15,7 +18,10 @@ const MyBookings = () => {
     <div className="space-y-5">
       <h1 className="text-3xl font-bold">My Bookings</h1>
       {bikes.map((bike) => (
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_3fr] border border-slate-300 rounded-lg p-8 gap-5">
+        <div
+          key={bike._id}
+          className="grid grid-cols-1 lg:grid-cols-[1fr_3fr] border border-slate-300 rounded-lg p-8 gap-5"
+        >
           <div className="lg:w-full lg:h-[250px]">
             <img
               src={bike.imageUrls[0]}
@@ -30,14 +36,36 @@ const MyBookings = () => {
               </div>
             </div>
             {bike.bookings.map((booking) => (
-              <div>
+              <div
+                key={booking._id}
+                className="flex items-center justify-between"
+              >
                 <div>
                   <span className="font-bold mr-2">Dates: </span>
                   <span>
-                    {new Date(booking.checkIn).toDateString()} -
+                    {new Date(booking.checkIn).toDateString()} -{" "}
                     {new Date(booking.checkOut).toDateString()}
                   </span>
                 </div>
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                  onClick={async () => {
+                    const confirmCancel = window.confirm(
+                      "Do you want to cancel this booking?"
+                    );
+                    if (!confirmCancel) return;
+
+                    try {
+                      await apiClient.cancelBooking(bike._id, booking._id);
+                      queryClient.invalidateQueries("fetchMyBookings");
+                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    } catch (error: any) {
+                      alert(error.message || "Failed to cancel booking");
+                    }
+                  }}
+                >
+                  Cancel
+                </button>
               </div>
             ))}
           </div>
