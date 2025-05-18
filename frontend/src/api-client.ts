@@ -258,7 +258,14 @@ export const createBikeBooking = async (formData: BookingFormData) => {
   );
 
   if (!response.ok) {
-    throw new Error("Error booking bike");
+    const errorData = await response.json();
+
+    // Handle specific error types
+    if (errorData.errorType === "UNAVAILABLE") {
+      throw new Error("Bike is not available");
+    }
+
+    throw new Error(errorData.message || "Error booking bike");
   }
 };
 export const fetchMyBookings = async (): Promise<BikeType[]> => {

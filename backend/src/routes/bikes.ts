@@ -4,6 +4,8 @@ import { BikeSearchResponse, BookingType } from "../shared/types";
 import { param, validationResult } from "express-validator";
 import verifyToken from "../middleware/auth";
 import Stripe from "stripe";
+import { isBikeAvailable } from "../controllers/BikeController";
+import mongoose from "mongoose";
 const stripe = new Stripe(process.env.STRIPE_API_KEY as string);
 const router = express.Router();
 router.get("/search", async (req: Request, res: Response) => {
@@ -79,9 +81,20 @@ router.post(
   "/:bikeId/bookings/payment-intent",
   verifyToken,
   async (req: Request, res: Response) => {
-    const { rentalType, numberOfDays, numberOfHours } = req.body;
+    const { rentalType, numberOfDays, numberOfHours, checkIn, checkOut } =
+      req.body;
     const bikeId = req.params.bikeId;
-
+    // Check availability first
+    const isAvailable = await isBikeAvailable(
+      bikeId,
+      new Date(checkIn),
+      new Date(checkOut)
+    );
+    if (!isAvailable) {
+      return res
+        .status(400)
+        .json({ message: "Bike not available for selected dates" });
+    }
     const bike = await Bike.findById(bikeId);
     if (!bike) {
       return res.status(400).json({ message: "Bike not found" });
@@ -121,9 +134,12 @@ router.post(
   "/:bikeId/bookings",
   verifyToken,
   async (req: Request, res: Response) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
     try {
       const paymentIntentId = req.body.paymentIntentId;
-
+      const { checkIn, checkOut } = req.body;
       const paymentIntent = await stripe.paymentIntents.retrieve(
         paymentIntentId as string
       );
@@ -144,7 +160,19 @@ router.post(
           message: `payment intent not succeeded. Status: ${paymentIntent.status}`,
         });
       }
+      const isAvailable = await isBikeAvailable(
+        req.params.bikeId,
+        new Date(checkIn),
+        new Date(checkOut)
+      );
 
+      if (!isAvailable) {
+        await session.abortTransaction();
+        return res.status(400).json({
+          message: "Bike is no longer available",
+          errorType: "UNAVAILABLE", // Add this identifier,
+        });
+      }
       const newBooking: BookingType = {
         ...req.body,
         userId: req.userId,
@@ -152,20 +180,25 @@ router.post(
 
       const bike = await Bike.findOneAndUpdate(
         { _id: req.params.bikeId },
-        {
-          $push: { bookings: newBooking },
-        }
+        { $push: { bookings: newBooking } },
+        { new: true, session }
       );
 
       if (!bike) {
+        await session.abortTransaction();
         return res.status(400).json({ message: "bike not found" });
       }
 
-      await bike.save();
+      await session.commitTransaction();
       res.status(200).send();
     } catch (error) {
+      await session.abortTransaction();
       console.log(error);
-      res.status(500).json({ message: "something went wrong" });
+      res
+        .status(500)
+        .json({ message: "something went wrong", errorType: "SERVER_ERROR" });
+    } finally {
+      session.endSession();
     }
   }
 );

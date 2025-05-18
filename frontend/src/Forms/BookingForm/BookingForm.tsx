@@ -127,6 +127,8 @@ export default BookingForm;
           {isLoading ? "Saving..." : "Confirm Booking"}
         </button>*/
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+
 import {
   PaymentIntentResponse,
   UserType,
@@ -184,7 +186,10 @@ const BookingForm = ({
         showToast({ message: "Booking Saved!", type: "SUCCESS" });
       },
       onError: () => {
-        showToast({ message: "Error saving booking", type: "ERROR" });
+        showToast({
+          message: "Booking  not available for selected dates",
+          type: "ERROR",
+        });
       },
     }
   );
@@ -205,20 +210,53 @@ const BookingForm = ({
       numberOfHours,
     },
   });
-
+  const navigate = useNavigate();
+  // In your BookingForm component
   const onSubmit = async (formData: BookingFormData) => {
-    if (!stripe || !elements) {
-      return;
-    }
+    if (!stripe || !elements) return;
 
-    const result = await stripe.confirmCardPayment(paymentIntent.clientSecret, {
-      payment_method: {
-        card: elements.getElement(CardElement) as StripeCardElement,
-      },
-    });
+    try {
+      const result = await stripe.confirmCardPayment(
+        paymentIntent.clientSecret,
+        {
+          payment_method: {
+            card: elements.getElement(CardElement) as StripeCardElement,
+          },
+        }
+      );
 
-    if (result.paymentIntent?.status === "succeeded") {
-      bookRoom({ ...formData, paymentIntentId: result.paymentIntent.id });
+      if (result.paymentIntent?.status === "succeeded") {
+        try {
+          await bookRoom({
+            ...formData,
+            paymentIntentId: result.paymentIntent.id,
+          });
+          navigate("/my-bookings");
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+          // Handle specific error cases
+          if (error.message.includes("no longer available")) {
+            showToast({
+              message:
+                "Bike is no longer available. Please select different dates.",
+              type: "ERROR",
+            });
+            navigate(`/bike/${bikeId}`);
+          } else {
+            showToast({
+              message: /* error.message ||*/ "Bike is no longer available",
+              type: "ERROR",
+            });
+          }
+        }
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+    } catch (error: any) {
+      showToast({
+        message:
+          /*error.message || "Payment failed"*/ "Bike is no longer available",
+        type: "ERROR",
+      });
     }
   };
 

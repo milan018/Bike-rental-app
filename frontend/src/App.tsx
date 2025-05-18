@@ -12,12 +12,15 @@ import Detail from "./Pages/Detail";
 import Booking from "./Pages/Booking";
 import MyBookings from "./Pages/MyBookings";
 import Home from "./Pages/Home";
+import { PrivacyPolicy } from "./components/Privacypolicy";
 
 const App = () => {
   const { isLoggedIn, user } = useAppContext();
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+
         <Route
           path="/"
           element={

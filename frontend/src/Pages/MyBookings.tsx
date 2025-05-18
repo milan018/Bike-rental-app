@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useQuery, useQueryClient } from "react-query";
+
 import * as apiClient from "../api-client";
 
 const MyBookings = () => {
@@ -46,6 +47,12 @@ const MyBookings = () => {
                     {new Date(booking.checkIn).toDateString()} -{" "}
                     {new Date(booking.checkOut).toDateString()}
                   </span>
+                  <div
+                    className="
+                  m-8 flex items-center text-green-600 font-semibold text-sm"
+                  >
+                    ✅ Payment Successful
+                  </div>
                 </div>
                 <button
                   className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
